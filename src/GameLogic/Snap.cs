@@ -34,10 +34,12 @@ namespace CardGames.GameLogic
 		/// <summary>
 		/// Create a new game of Snap!
 		/// </summary>
-		public Snap ()
-		{
-			_deck = new Deck ();
-		}
+		public Snap()
+	{
+		_deck = new Deck ();
+		_gameTimer = SwinGame.CreateTimer ();
+	}
+	
 
 		/// <summary>
 		/// Gets the card on the top of the "flip" stack. This card will be face up.
@@ -86,12 +88,12 @@ namespace CardGames.GameLogic
 		/// </summary>
 		public void Start()
 		{
-			if ( ! IsStarted )			// only start if not already started!
+			if ( ! IsStarted )       //only start
 			{
-				_started = true;
-				_deck.Shuffle ();		// Return the cards and shuffle
-
-				FlipNextCard ();		// Flip the first card...
+				_started =true;
+				_deck.Shuffle();    //Return
+				FlipNextCard();         //flip
+				_gameTimer.Start();
 			}
 		}
 			
@@ -110,9 +112,13 @@ namespace CardGames.GameLogic
 		/// the game to update its internal state.
 		/// </summary>
 		public void Update()
+	{
+		if (_gameTimer.Ticks>_flipTime)
 		{
-			//TODO: implement update to automatically slip cards!
+			_gameTimer.Reset();
+			FlipNextCard();
 		}
+	}
 
 		/// <summary>
 		/// Gets the player's score.
@@ -143,6 +149,7 @@ namespace CardGames.GameLogic
 
 			// stop the game...
 			_started = false;
+			_gameTimer.Stop();
 		}
 	
 		#region Snap Game Unit Tests
